@@ -21,6 +21,7 @@ import static com.google.common.collect.DiscreteDomain.integers;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Sets.cartesianProduct;
 import static com.tngtech.archunit.library.dependencies.CycleConfiguration.MAX_NUMBER_OF_CYCLES_TO_DETECT_PROPERTY_NAME;
+import static com.tngtech.archunit.library.dependencies.EdgeTest.newEdge;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
@@ -131,19 +132,19 @@ public class GraphTest {
     @Test
     public void graph_which_causes_error_when_dependently_blocked_nodes_are_not_cleared_after_unblocking() {
         ImmutableSet<Integer> nodes = ImmutableSet.of(0, 1, 2, 3, 4, 5);
-        Graph<Integer, Integer> graph = new Graph<>();
+        Graph<Integer, Object> graph = new Graph<>();
         graph.addNodes(nodes);
 
         graph.addEdges(ImmutableSet.of(
-                new Edge<Integer, Integer>(0, 4),
-                new Edge<Integer, Integer>(1, 0),
-                new Edge<Integer, Integer>(1, 5),
-                new Edge<Integer, Integer>(2, 1),
-                new Edge<Integer, Integer>(3, 1),
-                new Edge<Integer, Integer>(3, 5),
-                new Edge<Integer, Integer>(4, 3),
-                new Edge<Integer, Integer>(5, 1),
-                new Edge<Integer, Integer>(5, 2)
+                newEdge(0, 4),
+                newEdge(1, 0),
+                newEdge(1, 5),
+                newEdge(2, 1),
+                newEdge(3, 1),
+                newEdge(3, 5),
+                newEdge(4, 3),
+                newEdge(5, 1),
+                newEdge(5, 2)
         ));
 
         assertThat(graph.findCycles()).isNotEmpty();
@@ -231,11 +232,11 @@ public class GraphTest {
     }
 
     static Edge<String, String> stringEdge(String nodeA, String nodeB) {
-        return new Edge<>(nodeA, nodeB);
+        return newEdge(nodeA, nodeB);
     }
 
     private Edge<Integer, Integer> integerEdge(Integer origin, Integer target) {
-        return new Edge<>(origin, target);
+        return newEdge(origin, target);
     }
 
     static List<Edge<String, String>> singleEdgeList(String from, String to) {
